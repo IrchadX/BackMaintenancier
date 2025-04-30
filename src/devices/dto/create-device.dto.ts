@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 // In create-device.dto.ts
-import { IsInt, IsString, IsDate, IsBoolean, IsOptional, IsNumber } from 'class-validator';
+import { IsInt, IsString, IsDate, IsBoolean, IsOptional, IsNumber, IsArray } from 'class-validator';
 
 export class CreateDeviceDto {
     @IsInt()
@@ -29,14 +29,16 @@ export class CreateDeviceDto {
     @IsBoolean()
     connection_state?: boolean;
     @IsOptional()
-    @IsString()
-    image_url?: string;
+    @IsOptional()
+    @IsArray()
+    img_url?: string[];
     @IsInt()
     battery_capacity: number;
     
     @IsOptional()
     @IsNumber()
     price?: number;
-    @IsString()
-    temperature: string;
+    @IsOptional()
+    @IsInt()
+    temperature?: number;
 }
