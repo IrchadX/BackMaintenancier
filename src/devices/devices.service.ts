@@ -103,33 +103,26 @@ export class DevicesService {
       throw new NotFoundException(`Device with ID ${id} not found`);
     }
 
-    // Simulate a diagnostic check
+   
     const batteryLevel = device.battery_capacity;
     
-    // Simulate temperature (33°C normal, higher is warning)
+    
     const temperature = batteryLevel > 60 ? 33 : 56;
     
-    // Connectivity status based on device state
+    
     const connectivity = device.connection_state ? 'Bon réseau' : 'Faible signal';
     
     
-    const signalStrength = device.comm_state ? 'strong' : 'weak';
+    const signalStrength = device.comm_state ? 'allowed' : 'Blocked';
     
-    // Overall status
-    let status: 'ok' | 'warning' | 'error' = 'ok';
-    if (batteryLevel < 50 || temperature > 40 || !device.comm_state) {
-      status = 'warning';
-    }
-    if (batteryLevel < 20 || temperature > 50) {
-      status = 'error';
-    }
+    
+   
 
     return {
       batteryLevel,
       temperature,
       connectivity,
       signalStrength,
-      status,
     };
   }
 

@@ -37,4 +37,6 @@ export class CreateDeviceDto {
     @IsOptional()
     @IsNumber()
     price?: number;
+    @IsString()
+    temperature: string;
 }

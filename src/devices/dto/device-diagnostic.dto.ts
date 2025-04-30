@@ -3,5 +3,5 @@ export class DeviceDiagnosticDto {
     temperature: number;
     connectivity: string;
     signalStrength: string;
-    status: 'ok' | 'warning' | 'error';
+   
   }
