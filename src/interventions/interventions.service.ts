@@ -8,8 +8,27 @@ export class InterventionsService {
   constructor(private prisma: PrismaService) {}
 
   async create(createInterventionDto: CreateInterventionDto) {
+    const { maintenancier_id, device_id, ...otherData } = createInterventionDto;
+    
+    // Prepare creation data
+    const createData: any = {
+      ...otherData,
+      // Connect to the maintenance user
+      user: maintenancier_id ? {
+        connect: { id: maintenancier_id }
+      } : undefined
+    };
+
+    // Only add device connection if device_id is provided
+    if (device_id !== undefined) {
+      createData.device_id = device_id;
+    }
+
     return this.prisma.intervention_history.create({
-      data: createInterventionDto,
+      data: createData,
+      include: {
+        user: true
+      }
     });
   }
 
@@ -67,9 +86,29 @@ export class InterventionsService {
       throw new NotFoundException(`Intervention with ID ${id} not found`);
     }
 
+    const { maintenancier_id, device_id, ...otherData } = updateInterventionDto;
+    
+    // Prepare update data
+    const updateData: any = { ...otherData };
+    
+    // Only add user connection if maintenancier_id is provided
+    if (maintenancier_id !== undefined) {
+      updateData.user = {
+        connect: { id: maintenancier_id }
+      };
+    }
+
+    // Explicitly set device_id if provided
+    if (device_id !== undefined) {
+      updateData.device_id = device_id;
+    }
+
     return this.prisma.intervention_history.update({
       where: { id },
-      data: updateInterventionDto,
+      data: updateData,
+      include: {
+        user: true
+      }
     });
   }
 
@@ -88,6 +127,9 @@ export class InterventionsService {
         status: 'completed',
         completion_date: new Date(),
       },
+      include: {
+        user: true
+      }
     });
   }
 }

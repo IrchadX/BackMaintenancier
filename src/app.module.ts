@@ -4,7 +4,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { DevicesModule } from './devices/devices.module';
-import { AlertsModule } from './alerts/alerts.module';
 import { InterventionsModule } from './interventions/interventions.module';
 import { UsersModule } from './users/users.module';
 
@@ -15,7 +14,7 @@ import { UsersModule } from './users/users.module';
     }),
     PrismaModule,
     DevicesModule,
-    AlertsModule,
+
     InterventionsModule,
     UsersModule,
   ],
