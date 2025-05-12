@@ -5,7 +5,7 @@ import { DeviceService } from './device.service';
 export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}
 
-  @Post('check-status')
+  @Post('checkstatus')
   async checkDeviceStatus() {
     return this.deviceService.checkDeviceStatus();
   }

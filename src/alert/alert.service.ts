@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { NotificationGateway } from '../notification/notification.gateway';
 
 @Injectable()
 export class AlertService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notificationGateway: NotificationGateway
+  ) {}
 
   private mapAlertToNotification(alert: any) {
     return {
@@ -33,5 +37,14 @@ export class AlertService {
     });
 
     return alerts.map(this.mapAlertToNotification);
+  }
+
+
+  async createAlert(data: any) {
+    const alert = await this.prisma.alert.create({ data });
+    const mapped = this.mapAlertToNotification(alert);
+    this.notificationGateway.sendAlertNotification(mapped);
+
+    return mapped;
   }
 }

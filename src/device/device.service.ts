@@ -17,12 +17,12 @@ export class DeviceService {
         where: { id: device.state_type_id },
       });
 
-      let alertLevel: 'mineur' | 'mod_r_' | 'critique' | null = null;
+      let alertLevel: 'mineur' | 'modere' | 'critique' | null = null;
       let type = '';
       let message = '';
 
       if (device.battery_capacity < 10) {
-        alertLevel = 'mod_r_';
+        alertLevel = 'modere';
         type = 'Batterie';
         message = `Batterie très faible (${device.battery_capacity}%)`;
       } else if (device.battery_capacity < 20) {
@@ -30,7 +30,7 @@ export class DeviceService {
         type = 'Batterie';
         message = `Batterie faible (${device.battery_capacity}%)`;
       } else if (!device.connection_state) {
-        alertLevel = 'mod_r_';
+        alertLevel = 'modere';
         type = 'Connexion perdue';
         message = `Le dispositif ${device.id} est hors ligne.`;
       }
@@ -65,8 +65,8 @@ export class DeviceService {
           severity:
             alertLevel === 'mineur'
               ? 'mineur'
-              : alertLevel === 'mod_r_'
-              ? 'modéré'
+              : alertLevel === 'modere'
+              ? 'modere'
               : 'critique',
         };
 
