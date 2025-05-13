@@ -11,10 +11,13 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private configService: ConfigService) {
+    // Using type assertion to tell TypeScript that we guarantee this is a string
+    const secretKey = configService.get('JWT_SECRET') as string;
+    
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET'),
+      secretOrKey: secretKey,
     });
   }
 
