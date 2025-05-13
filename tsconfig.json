@@ -1,11 +1,8 @@
 {
   "compilerOptions": {
-<<<<<<< HEAD
-=======
     "paths": {
       "@supabase/*": ["src/supabase/*"]
     },
->>>>>>> dina
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
@@ -24,8 +21,5 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false
   }
-<<<<<<< HEAD
   
-=======
->>>>>>> dina
 }
