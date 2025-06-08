@@ -32,40 +32,41 @@ describe('InterventionsService', () => {
 
   describe('create', () => {
     it('should create a technical intervention', async () => {
-      const createInterventionDto: CreateInterventionDto = {
-        device_id: 10,
-        scheduled_date: new Date('2025-05-20'),
-        maintenancier_id: 2,
-        status: "pending",
-        type: 'technique',
-        description: "Maintenance régulière",
-      };
-
-      const techExpectedResult = {
-        id: 1,
-        device_id: 10,
-        maintenancier_id: 2,
-        scheduled_date: new Date('2025-05-20'),
-        completion_date: null,
-        description: "Maintenance régulière",
-        status: "pending",
-        type: 'technique' as intervention_type,
-        created_at: new Date(),
-        title: null,  // Added missing field
-        location: null,  // Added missing field
-      };
-
-      jest.spyOn(prismaService.intervention_history, 'create').mockResolvedValue(techExpectedResult);
-      const result = await service.create(createInterventionDto);
-      expect(result).toEqual(techExpectedResult);
-      expect(prismaService.intervention_history.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({
-          device_id: 10,
-          maintenancier_id: 2,
-          type: 'technique',
-        }),
-      });
-    });
+  const createInterventionDto: CreateInterventionDto = {
+    device_id: 10,
+    scheduled_date: new Date('2025-05-20'),
+    maintenancier_id: 2,
+    status: "pending",
+    type: 'technique',
+    description: "Maintenance régulière",
+  };
+  const techExpectedResult = {
+    id: 1,
+    device_id: 10,
+    maintenancier_id: 2,
+    scheduled_date: new Date('2025-05-20'),
+    completion_date: null,
+    description: "Maintenance régulière",
+    status: "pending",
+    type: 'technique' as intervention_type,
+    created_at: new Date(),
+    title: null,  
+    location: null,  
+  };
+  jest.spyOn(prismaService.intervention_history, 'create').mockResolvedValue(techExpectedResult);
+  const result = await service.create(createInterventionDto);
+  expect(result).toEqual(techExpectedResult);
+  expect(prismaService.intervention_history.create).toHaveBeenCalledWith({
+    data: {
+      device_id: 10,
+      scheduled_date: new Date('2025-05-20'),
+      maintenancier_id: 2,
+      status: "pending",
+      type: 'technique',
+      description: "Maintenance régulière",
+    }
+  });
+});
 
     it('should create a non-technical intervention', async () => {
       const createInterventionDto: CreateInterventionDto = {
@@ -86,8 +87,8 @@ describe('InterventionsService', () => {
         status: null,
         type: 'Non_technique' as intervention_type,
         created_at: new Date(),
-        title: null,  // Added missing field
-        location: null,  // Added missing field
+        title: null, 
+        location: null, 
       };
 
       jest.spyOn(prismaService.intervention_history, 'create').mockResolvedValue(nonTechExpectedResult);
@@ -117,11 +118,11 @@ describe('InterventionsService', () => {
         scheduled_date: new Date('2025-06-15'),
         completion_date: null,
         description: null,
-        status: "pending", // Assuming this is the default
+        status: "pending",
         type: 'technique' as intervention_type,
         created_at: new Date(),
-        title: null,  // Added missing field
-        location: null,  // Added missing field
+        title: null,  
+        location: null, 
       };
 
       jest.spyOn(prismaService.intervention_history, 'create').mockResolvedValue(minimalExpectedResult);

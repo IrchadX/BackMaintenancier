@@ -31,4 +31,11 @@ export class UpdateInterventionDto {
     @IsOptional()
     @IsEnum(['technique', 'Non_technique'])
     type?: 'technique' | 'Non_technique';
+     @IsOptional()
+    @IsString()
+    title?: string;  
+    
+    @IsOptional()
+    @IsString()
+    location?: string;
 }

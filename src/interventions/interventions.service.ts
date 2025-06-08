@@ -2,18 +2,16 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateInterventionDto } from './dto/create-intervention.dto';
 import { UpdateInterventionDto } from './dto/update-intervention.dto';
-
+import { user as User } from '@prisma/client';
 @Injectable()
 export class InterventionsService {
   constructor(private prisma: PrismaService) {}
-
   async create(createInterventionDto: CreateInterventionDto) {
-    // Ensure scheduled_date is properly parsed as a Date object
     const data = {
       ...createInterventionDto,
-      scheduled_date: new Date(createInterventionDto.scheduled_date)
+      scheduled_date: new Date(createInterventionDto.scheduled_date), 
+      
     };
-
     return this.prisma.intervention_history.create({
       data,
     });
@@ -48,22 +46,50 @@ export class InterventionsService {
       },
     });
   }
+async remove(id: number) {
+  const intervention = await this.prisma.intervention_history.findUnique({
+    where: { id },
+  });
 
-  async findOne(id: number) {
-    const intervention = await this.prisma.intervention_history.findUnique({
-      where: { id },
-      include: {
-        user: true,
-      },
-    });
-
-    if (!intervention) {
-      throw new NotFoundException(`Intervention with ID ${id} not found`);
-    }
-
-    return intervention;
+  if (!intervention) {
+    throw new NotFoundException(`Intervention with ID ${id} not found`);
   }
 
+  await this.prisma.intervention_history.delete({
+    where: { id },
+  });
+
+  return { message: `Intervention with ID ${id} has been deleted` };
+}
+
+  async findOne(id: number) {
+  const intervention = await this.prisma.intervention_history.findUnique({
+    where: { id },
+  });
+
+  if (!intervention) {
+    throw new NotFoundException(`Intervention with ID ${id} not found`);
+  }
+
+  let user: User | null = null;
+
+  if (intervention.device_id) {
+    const device = await this.prisma.device.findUnique({
+      where: { id: intervention.device_id },
+      include: { user: true },
+    });
+
+    if (device?.user) {
+      const { password, ...safeUser } = device.user; // hide password
+      user = safeUser as User;
+    }
+  }
+
+  return {
+    ...intervention,
+    user,
+  };
+}
   async update(id: number, updateInterventionDto: UpdateInterventionDto) {
     const intervention = await this.prisma.intervention_history.findUnique({
       where: { id },

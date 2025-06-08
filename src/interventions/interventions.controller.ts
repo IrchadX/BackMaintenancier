@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Patch, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch,Delete, Query } from '@nestjs/common';
 import { InterventionsService } from './interventions.service';
 import { CreateInterventionDto } from './dto/create-intervention.dto';
 import { UpdateInterventionDto } from './dto/update-intervention.dto';
@@ -36,4 +36,8 @@ export class InterventionsController {
   complete(@Param('id') id: string) {
     return this.interventionsService.complete(+id);
   }
+  @Delete(':id')
+remove(@Param('id') id: string) {
+  return this.interventionsService.remove(+id);
+}
 }
