@@ -6,24 +6,59 @@ import { user as User } from '@prisma/client';
 @Injectable()
 export class InterventionsService {
   constructor(private prisma: PrismaService) {}
-  async create(createInterventionDto: CreateInterventionDto) {
-    const data = {
-      ...createInterventionDto,
-      scheduled_date: new Date(createInterventionDto.scheduled_date), 
-      
-    };
-    return this.prisma.intervention_history.create({
-      data,
+ async create(createInterventionDto: CreateInterventionDto) {
+  const data = {
+    ...createInterventionDto,
+    scheduled_date: new Date(createInterventionDto.scheduled_date),
+  };
+
+  // Step 1: Create the intervention
+  const intervention = await this.prisma.intervention_history.create({
+    data,
+  });
+
+  // Step 2: Update the device's state_type_id to 11
+  if (intervention.device_id) {
+    await this.prisma.device.update({
+      where: { id: intervention.device_id },
+      data: { state_type_id: 11 },
     });
   }
 
+  return intervention;
+}
+
+
   async findAll() {
-    return this.prisma.intervention_history.findMany({
-      include: {
-        user: true,
-      },
-    });
-  }
+  const interventions = await this.prisma.intervention_history.findMany();
+
+  const results = await Promise.all(
+    interventions.map(async (intervention) => {
+      let user: Partial<User> | null = null;
+
+
+      if (intervention.device_id) {
+        const device = await this.prisma.device.findUnique({
+          where: { id: intervention.device_id },
+          include: { user: true },
+        });
+
+        if (device?.user) {
+          const { password, ...safeUser } = device.user; // remove sensitive field
+          user = safeUser;
+        }
+      }
+
+      return {
+        ...intervention,
+        user,
+      };
+    })
+  );
+
+  return results;
+}
+
 
   async findPending() {
     return this.prisma.intervention_history.findMany({
@@ -112,20 +147,32 @@ async remove(id: number) {
   }
 
   async complete(id: number) {
-    const intervention = await this.prisma.intervention_history.findUnique({
-      where: { id },
-    });
-    
-    if (!intervention) {
-      throw new NotFoundException(`Intervention with ID ${id} not found`);
-    }
+  const intervention = await this.prisma.intervention_history.findUnique({
+    where: { id },
+  });
 
-    return this.prisma.intervention_history.update({
-      where: { id },
-      data: {
-        status: 'completed',
-        completion_date: new Date(),
-      },
+  if (!intervention) {
+    throw new NotFoundException(`Intervention with ID ${id} not found`);
+  }
+
+  // Step 1: Update the intervention status and completion_date
+  const updatedIntervention = await this.prisma.intervention_history.update({
+    where: { id },
+    data: {
+      status: 'completed',
+      completion_date: new Date(),
+    },
+  });
+
+  // Step 2: Update device state_type_id to 9
+  if (intervention.device_id) {
+    await this.prisma.device.update({
+      where: { id: intervention.device_id },
+      data: { state_type_id: 9 },
     });
   }
+
+  return updatedIntervention;
+}
+
 }
