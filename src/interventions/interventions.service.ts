@@ -6,27 +6,37 @@ import { user as User } from '@prisma/client';
 @Injectable()
 export class InterventionsService {
   constructor(private prisma: PrismaService) {}
- async create(createInterventionDto: CreateInterventionDto) {
+async create(createInterventionDto: CreateInterventionDto) {
   const data = {
     ...createInterventionDto,
     scheduled_date: new Date(createInterventionDto.scheduled_date),
   };
 
-  // Step 1: Create the intervention
-  const intervention = await this.prisma.intervention_history.create({
+  const newIntervention = await this.prisma.intervention_history.create({
     data,
   });
 
-  // Step 2: Update the device's state_type_id to 11
-  if (intervention.device_id) {
+  // Step 1: Change the device state_type_id to 11
+  if (newIntervention.device_id) {
     await this.prisma.device.update({
-      where: { id: intervention.device_id },
+      where: { id: newIntervention.device_id },
       data: { state_type_id: 11 },
+    });
+
+    // Step 2: Resolve alerts attached to this device
+    await this.prisma.alert.updateMany({
+      where: {
+        device_id: newIntervention.device_id,
+      },
+      data: {
+        status: 'Resolved',
+      },
     });
   }
 
-  return intervention;
+  return newIntervention;
 }
+
 
 
   async findAll() {
