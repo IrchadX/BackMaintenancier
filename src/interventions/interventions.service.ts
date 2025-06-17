@@ -2,7 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateInterventionDto } from './dto/create-intervention.dto';
 import { UpdateInterventionDto } from './dto/update-intervention.dto';
-import { user as User } from '@prisma/client';
+import { User } from 'src/users/entities/user.entity';
+
 @Injectable()
 export class InterventionsService {
   constructor(private prisma: PrismaService) {}
