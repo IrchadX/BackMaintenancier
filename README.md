@@ -50,9 +50,9 @@ src/
 
 ## Prerequisites
 
-- Node.js (v16 or higher)
+- Node.js
 - npm or yarn
-- Supabase account and project
+- Supabase 
 - PostgreSQL database (via Supabase)
 
 ## Environment Setup
@@ -60,19 +60,17 @@ src/
 Create a `.env` file in the root directory with the following variables:
 
 ```env
-# Database
-DATABASE_URL="your_supabase_database_url"
+# Environment variables declared in this file are automatically made available to Prisma.
+# See the documentation for more detail: https://pris.ly/d/prisma-schema#accessing-environment-variables-from-the-schema
 
-# JWT Secret
-JWT_SECRET="your_jwt_secret_key"
+# Prisma supports the native connection string format for PostgreSQL, MySQL, SQLite, SQL Server, MongoDB and CockroachDB.
+# See the documentation for all the connection string options: https://pris.ly/d/connection-strings
 
-# Supabase Configuration
-SUPABASE_URL="your_supabase_project_url"
-SUPABASE_ANON_KEY="your_supabase_anon_key"
-SUPABASE_SERVICE_ROLE_KEY="your_supabase_service_role_key"
-
-# Application
-PORT=3000
+#DATABASE_URL="postgresql://safa:safa@localhost:5432/xceed?schema=public"
+#DIRECT_URL="postgresql://safa:safa@localhost:5432/xceed"
+DATABASE_URL="postgresql://postgres.rsctlmexmrtoamsucnsp:kitxiV-0gofce-henboq@aws-0-eu-west-3.pooler.supabase.com:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres.rsctlmexmrtoamsucnsp:kitxiV-0gofce-henboq@aws-0-eu-west-3.pooler.supabase.com:5432/postgres"
+JWT_SECRET="9b33622f0fe0486cff5f5bc4bee3716f9652db6d9d86e953a25c75b8694be71b666d106eaf65bc637213a4d21aed2f232e414c1fab34ba4447b3250d83dd4079d5b31762a9c809b335a1fa7f1253488afeed06a09973092fc7d424e185224ac2bac97a9ec5f263794a05f670d7f84899eb4d995d93c10a9c34c015948fa7869aac6e6b4d476cda4b7164d4db54e1708fddcbcd86016955c19afb949801cb466a83045005d744530a5fed7d45cee9b0d209d548ed3f891e3f399e8198a692f28e25d93cad2529ea5f066c306b79c97f2b28942b8982c6344765f6c4ed347bb3c68ba76682015f8616c10f75745a9006593865429ebdbd97b0e33243810749b7f0"    
 ```
 
 ## Project Setup
@@ -89,14 +87,21 @@ $ npx prisma migrate dev --name init
 
 # Regenerate Prisma client (if needed)
 $ npx prisma generate
+#Core NestJS Dependencies
+$ npm install @nestjs/core @nestjs/common @nestjs/platform-express
+# Authentication Dependencies
+$ npm install @nestjs/jwt @nestjs/passport passport passport-jwt bcrypt
+$ npm install --save-dev @types/passport-jwt @types/bcrypt
+# Database Dependencies
+$ npm install prisma @prisma/client @supabase/supabase-js
+# WebSocket Dependencies
+$ npm install @nestjs/websockets @nestjs/platform-socket.io socket.io
+# Configuration & Validation
+$ npm install @nestjs/config class-validator class-transformer
+# Development Dependencies
+$ npm install --save-dev @types/passport-jwt @types/bcrypt @types/node typescript ts-node
 ```
 
-## Database Setup
-
-1. Create a Supabase project at [supabase.com](https://supabase.com)
-2. Get your database URL from the Supabase dashboard
-3. Update your `.env` file with the correct database URL
-4. Run migrations to set up your database schema:
 
 ```bash
 $ npx prisma migrate dev
@@ -115,7 +120,7 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-The application will start on `http://localhost:3000` (or the PORT specified in your .env file).
+The application will start on `http://localhost:3000` .
 
 ## API Endpoints
 
@@ -176,26 +181,8 @@ $ npx prisma migrate reset
 $ npx prisma db pull
 ```
 
-## CORS Configuration
 
-The application is configured to accept requests from:
-- `http://localhost:3000`
-- `http://localhost:3001`
 
-Update the CORS configuration in `src/main.ts` if you need to add additional origins.
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-### Environment Variables for Production
-
-Make sure to set the following environment variables in your production environment:
-- `DATABASE_URL`
-- `JWT_SECRET`
-- `SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY`
-- `PORT`
 
 ### Build for Production
 
@@ -203,20 +190,8 @@ Make sure to set the following environment variables in your production environm
 # Build the application
 $ npm run build
 
-# Start production server
-$ npm run start:prod
+
 ```
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g mau
-$ mau deploy
-```
-
-## Troubleshooting
-
-### Common Issues
 
 1. **Prisma Client not generated**: Run `npx prisma generate`
 2. **Database connection issues**: Check your `DATABASE_URL` in `.env`
@@ -233,37 +208,3 @@ $ npx prisma migrate reset
 # Check database status
 $ npx prisma migrate status
 ```
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Additional Resources
-
-- [Prisma Documentation](https://www.prisma.io/docs/)
-- [Supabase Documentation](https://supabase.com/docs)
-- [JWT Documentation](https://jwt.io/)
-- [Socket.IO Documentation](https://socket.io/docs/)
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in Touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
