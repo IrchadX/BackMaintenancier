@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "paths": {
+      "@supabase/*": ["src/supabase/*"]
+    },
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,

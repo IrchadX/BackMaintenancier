@@ -1,4 +1,10 @@
 {
   "singleQuote": true,
+<<<<<<< HEAD
   "trailingComma": "all"
 }
+=======
+  "trailingComma": "all",
+  "endOfLine": "lf"
+}
+>>>>>>> dina
