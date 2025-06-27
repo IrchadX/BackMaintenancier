@@ -18,81 +18,193 @@
     <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
   <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[Nest](https://github.com/nestjs/nest) framework TypeScript application with JWT authentication, Prisma ORM, Supabase integration, and real-time WebSocket notifications.
 
-## Project setup
+## Features
 
-```bash
-$ npm install
+- **JWT Authentication** - Secure token-based authentication with Passport.js
+- **Prisma ORM** - Type-safe database access with Supabase PostgreSQL
+- **WebSocket Support** - Real-time notifications using Socket.IO
+- **Device Management** - Device monitoring and alert system
+- **User Management** - User registration and profile management
+- **Alert System** - Real-time alert notifications
+
+## Project Structure
+
+```
+src/
+├── auth/           # JWT authentication module
+├── users/          # User management
+├── device/         # Device operations
+├── devices/        # Device management
+├── alert/          # Alert system
+├── interventions/  # Intervention management
+├── notification/   # WebSocket notifications
+├── prisma/         # Prisma service
+├── supabase/       # Supabase integration
+└── app.module.ts   # Main application module
 ```
 
-## Compile and run the project
+## Prerequisites
+
+- Node.js
+- npm or yarn
+- Supabase 
+- PostgreSQL database (via Supabase)
+
+## Environment Setup
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+# Environment variables declared in this file are automatically made available to Prisma.
+# See the documentation for more detail: https://pris.ly/d/prisma-schema#accessing-environment-variables-from-the-schema
+
+# Prisma supports the native connection string format for PostgreSQL, MySQL, SQLite, SQL Server, MongoDB and CockroachDB.
+# See the documentation for all the connection string options: https://pris.ly/d/connection-strings
+
+#DATABASE_URL="postgresql://safa:safa@localhost:5432/xceed?schema=public"
+#DIRECT_URL="postgresql://safa:safa@localhost:5432/xceed"
+DATABASE_URL="postgresql://postgres.rsctlmexmrtoamsucnsp:kitxiV-0gofce-henboq@aws-0-eu-west-3.pooler.supabase.com:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres.rsctlmexmrtoamsucnsp:kitxiV-0gofce-henboq@aws-0-eu-west-3.pooler.supabase.com:5432/postgres"
+JWT_SECRET="9b33622f0fe0486cff5f5bc4bee3716f9652db6d9d86e953a25c75b8694be71b666d106eaf65bc637213a4d21aed2f232e414c1fab34ba4447b3250d83dd4079d5b31762a9c809b335a1fa7f1253488afeed06a09973092fc7d424e185224ac2bac97a9ec5f263794a05f670d7f84899eb4d995d93c10a9c34c015948fa7869aac6e6b4d476cda4b7164d4db54e1708fddcbcd86016955c19afb949801cb466a83045005d744530a5fed7d45cee9b0d209d548ed3f891e3f399e8198a692f28e25d93cad2529ea5f066c306b79c97f2b28942b8982c6344765f6c4ed347bb3c68ba76682015f8616c10f75745a9006593865429ebdbd97b0e33243810749b7f0"    
+```
+
+## Project Setup
 
 ```bash
-# development
+# Install dependencies
+$ npm install
+
+# Generate Prisma client
+$ npx prisma generate
+
+# Run database migrations
+$ npx prisma migrate dev --name init
+
+# Regenerate Prisma client (if needed)
+$ npx prisma generate
+#Core NestJS Dependencies
+$ npm install @nestjs/core @nestjs/common @nestjs/platform-express
+# Authentication Dependencies
+$ npm install @nestjs/jwt @nestjs/passport passport passport-jwt bcrypt
+$ npm install --save-dev @types/passport-jwt @types/bcrypt
+# Database Dependencies
+$ npm install prisma @prisma/client @supabase/supabase-js
+# WebSocket Dependencies
+$ npm install @nestjs/websockets @nestjs/platform-socket.io socket.io
+# Configuration & Validation
+$ npm install @nestjs/config class-validator class-transformer
+# Development Dependencies
+$ npm install --save-dev @types/passport-jwt @types/bcrypt @types/node typescript ts-node
+```
+
+
+```bash
+$ npx prisma migrate dev
+```
+
+## Compile and Run the Project
+
+```bash
+# Development mode
 $ npm run start
 
-# watch mode
+# Watch mode (recommended for development)
 $ npm run start:dev
 
-# production mode
+# Production mode
 $ npm run start:prod
 ```
 
-## Run tests
+The application will start on `http://localhost:3000` .
+
+## API Endpoints
+
+### Authentication
+- `POST /auth/login` - User login
+- `POST /auth/validate-token` - Token validation
+
+### Users
+- `GET /users` - Get all users
+- `POST /users` - Create new user
+- `GET /users/:id` - Get user by ID
+
+### Devices
+- `GET /devices` - Get all devices
+- `POST /devices` - Create new device
+- `PUT /devices/:id` - Update device
+
+### Alerts
+- `GET /alerts` - Get all alerts
+- `POST /alerts` - Create new alert
+
+## WebSocket Events
+
+The application supports real-time notifications via WebSocket:
+
+- Connect to: `ws://localhost:3000`
+- Listen for `alert` events for real-time notifications
+
+## Run Tests
 
 ```bash
-# unit tests
+# Unit tests
 $ npm run test
 
-# e2e tests
+# End-to-end tests
 $ npm run test:e2e
 
-# test coverage
+# Test coverage
 $ npm run test:cov
 ```
 
-## Deployment
+## Development Tools
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+### Prisma Studio
+Access your database with a visual editor:
 ```bash
-$ npm install -g mau
-$ mau deploy
+$ npx prisma studio
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Database Reset
+Reset your database and run migrations:
+```bash
+$ npx prisma migrate reset
+```
 
-## Resources
+### View Database Schema
+```bash
+$ npx prisma db pull
+```
 
-Check out a few resources that may come in handy when working with NestJS:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
 
-## Support
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Build for Production
 
-## Stay in touch
+```bash
+# Build the application
+$ npm run build
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
 
-## License
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+1. **Prisma Client not generated**: Run `npx prisma generate`
+2. **Database connection issues**: Check your `DATABASE_URL` in `.env`
+3. **JWT errors**: Ensure `JWT_SECRET` is set in your environment
+4. **CORS issues**: Update CORS origins in `src/main.ts`
+
+### Database Issues
+
+If you encounter database-related issues:
+```bash
+# Reset and migrate
+$ npx prisma migrate reset
+
+# Check database status
+$ npx prisma migrate status
+```
